@@ -1,6 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\{
+  MovieController,
+  UserController
+};
 use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Passport;
 
@@ -15,4 +18,9 @@ use Laravel\Passport\Passport;
 |
 */
 Passport::routes();
-Route::post('/user', 'App\Http\Controllers\UserController@store');
+
+Route::post('/user', [UserController::class, 'store']);
+
+Route::middleware('auth:api')->group(function(){
+  Route::apiResource('movies', MovieController::class);
+});
