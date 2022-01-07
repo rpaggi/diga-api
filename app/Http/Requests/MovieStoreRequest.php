@@ -24,7 +24,7 @@ class MovieStoreRequest extends FormRequest
     public function rules()
     {
         return [
-          "name" => ["required", "min:3"],
+          "name" => ["required", "min:3", "max: 50"],
           "poster" => ["required", "image", "max:3072"]
         ];
     }

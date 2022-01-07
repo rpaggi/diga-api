@@ -24,7 +24,7 @@ class MovieUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            "name" => [ "min:3" ],
+            "name" => [ "min:3", "max:50" ],
             "poster" => [ "image", "max:3072" ]
         ];
     }
