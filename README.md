@@ -12,6 +12,7 @@
 5. Now run the migrate command `docker-compose exec laravel php artisan migrate --seed`
 6. Now run the passport command to generate the client keys `docker-compose exec laravel php artisan passport:install`
 7. Copy the Password Client id and secret, this will needed to call login endpoint
+8. Run the following command to create storage link `docker-compose exec laravel php artisan storage:link`
 
 ##Postman Collection
 The postman collection and environment to use the api is available on file `postman_collection.json` and `postman_environment.json` at the root of project.

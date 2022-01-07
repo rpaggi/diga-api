@@ -19,6 +19,7 @@ class MovieResource extends JsonResource
         'id' => $this->id,
         'name' => $this->name,
         'tags' => MovieTagResource::collection( $this->tags ),
+        'poster' => env('APP_URL')."/".str_replace('public/', 'storage/', $this->poster),
         'created_at' => $this->created_at
     ];
   }

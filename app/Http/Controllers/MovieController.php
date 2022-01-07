@@ -8,6 +8,7 @@ use App\Http\Resources\MovieResource;
 use App\Http\Resources\MovieStoreResource;
 use App\Models\Movie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
@@ -35,7 +36,7 @@ class MovieController extends Controller
   {
     $movie = Movie::create([
         'name' => $request->name,
-        'poster' => Storage::putFile('posters', $request->file('poster'), time() )
+        'poster' => Storage::putFile('public/posters', $request->file('poster'), time() )
     ]);
 
     if( $request->has('tags') ){
@@ -68,7 +69,7 @@ class MovieController extends Controller
     $data  = $request->all();
     if( $request->hasFile('poster') ){
       Storage::delete( $movie->poster );
-      $data['poster'] = Storage::putFile('posters', $request->file('poster'), time() );
+      $data['poster'] = Storage::putFile('public/posters', $request->file('poster'), time() );
     }
 
     $movie->fill($data);
@@ -89,6 +90,8 @@ class MovieController extends Controller
    */
   public function destroy(Movie $movie)
   {
+    DB::table('movie_movie_tag')->where('movie_id', $movie->id)->delete();
+    Storage::delete( $movie->poster );
     $movie->delete();
   }
 }
