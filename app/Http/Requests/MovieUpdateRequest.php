@@ -25,7 +25,8 @@ class MovieUpdateRequest extends FormRequest
     {
         return [
             "name" => [ "min:3", "max:50" ],
-            "poster" => [ "image", "max:3072" ]
+            "poster" => [ "image", "max:3072" ],
+            "tags" => ["array", "min:1"]
         ];
     }
 }

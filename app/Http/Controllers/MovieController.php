@@ -19,12 +19,10 @@ class MovieController extends Controller
      */
     public function index(Request $request)
     {
-        $builder = Movie::orderBy('name', 'ASC');
-        if( $request->has("sort") && strtoupper($request->sort) === 'DESC'){
-          $builder->orderBy('name', 'DESC');
-        }
+        $sort = $request->has('sort') ? $request->sort : 'asc';
 
-        return MovieResource::collection( $builder->get() );
+        return MovieResource::collection( Movie::orderBy('name', $sort)->get() );
+
     }
 
     /**

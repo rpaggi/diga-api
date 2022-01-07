@@ -25,7 +25,8 @@ class MovieStoreRequest extends FormRequest
     {
         return [
           "name" => ["required", "min:3", "max: 50"],
-          "poster" => ["required", "image", "max:3072"]
+          "poster" => ["required", "image", "max:3072"],
+          "tags" => ["array", "min:1"]
         ];
     }
 }
