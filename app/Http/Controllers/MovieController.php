@@ -21,7 +21,7 @@ class MovieController extends Controller
   {
     $sort = $request->has('sort') ? $request->sort : 'asc';
 
-    return MovieResource::collection( Movie::with('tags')->orderBy('name', $sort)->get() );
+    return MovieResource::collection( Movie::orderBy('name', $sort)->get() );
 
   }
 
@@ -53,7 +53,6 @@ class MovieController extends Controller
    */
   public function show(Movie $movie)
   {
-    $movie->load('tags');
     return new MovieResource( $movie );
   }
 
