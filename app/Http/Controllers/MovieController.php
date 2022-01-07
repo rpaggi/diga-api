@@ -12,75 +12,84 @@ use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
-    {
-        $sort = $request->has('sort') ? $request->sort : 'asc';
+  /**
+   * Display a listing of the resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function index(Request $request)
+  {
+    $sort = $request->has('sort') ? $request->sort : 'asc';
 
-        return MovieResource::collection( Movie::orderBy('name', $sort)->get() );
+    return MovieResource::collection( Movie::with('tags')->orderBy('name', $sort)->get() );
 
+  }
+
+  /**
+   * Store a newly created resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   */
+  public function store(MovieStoreRequest $request)
+  {
+    $movie = Movie::create([
+        'name' => $request->name,
+        'poster' => Storage::putFile('posters', $request->file('poster'), time() )
+    ]);
+
+    if( $request->has('tags') ){
+      $movie->tags()->sync($request->tags);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(MovieStoreRequest $request)
-    {
-        $movie = Movie::create([
-            'name' => $request->name,
-            'poster' => Storage::putFile('posters', $request->file('poster'), time() )
-        ]);
+    return new MovieResource( $movie );
+  }
 
-        return new MovieResource( $movie );
+  /**
+   * Display the specified resource.
+   *
+   * @param  int  $id
+   * @return \Illuminate\Http\Response
+   */
+  public function show(Movie $movie)
+  {
+    $movie->load('tags');
+    return new MovieResource( $movie );
+  }
+
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  int  $id
+   * @return \Illuminate\Http\Response
+   */
+  public function update(MovieUpdateRequest $request, Movie $movie)
+  {
+    $data  = $request->all();
+    if( $request->hasFile('poster') ){
+      Storage::delete( $movie->poster );
+      $data['poster'] = Storage::putFile('posters', $request->file('poster'), time() );
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Movie $movie)
-    {
-      return new MovieResource( $movie );
+    $movie->fill($data);
+    $movie->save();
+
+    if( $request->has('tags') ){
+      $movie->tags()->sync($request->tags);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(MovieUpdateRequest $request, Movie $movie)
-    {
-        $data  = $request->all();
-        if( $request->hasFile('poster') ){
-          Storage::delete( $movie->poster );
-          $data['poster'] = Storage::putFile('posters', $request->file('poster'), time() );
-        }
+    return new MovieResource( $movie );
+  }
 
-        $movie->fill($data);
-        $movie->save();
-
-        return new MovieResource( $movie );
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Movie $movie)
-    {
-        $movie->delete();
-    }
+  /**
+   * Remove the specified resource from storage.
+   *
+   * @param  int  $id
+   * @return \Illuminate\Http\Response
+   */
+  public function destroy(Movie $movie)
+  {
+    $movie->delete();
+  }
 }

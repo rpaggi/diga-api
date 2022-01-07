@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MovieResource extends JsonResource
+class MovieTagResource extends JsonResource
 {
   /**
    * Transform the resource into an array.
@@ -15,10 +15,8 @@ class MovieResource extends JsonResource
   public function toArray($request)
   {
     return [
-        'id' => $this->id,
-        'name' => $this->name,
-        'tags' => MovieTagResource::collection( $this->tags ),
-        'created_at' => $this->created_at
+        "id" => $this->id,
+        "name" => $this->name
     ];
   }
 }
