@@ -19,6 +19,9 @@ Passport::routes();
 Route::post('/user', [UserController::class, 'store']);
 
 Route::middleware('auth:api')->group(function(){
+  Route::get('/me', function(){
+    return response()->json(\Auth::user());
+  });
   Route::apiResource('movies', MovieController::class);
   Route::apiResource('movie-tags', MovieTagController::class)->except(['update', 'destroy', 'show']);
 });
