@@ -13,4 +13,8 @@ class Movie extends Model
       'name',
       'poster'
     ];
+
+    public function tags(){
+      return $this->belongsToMany(MovieTag::class);
+    }
 }
