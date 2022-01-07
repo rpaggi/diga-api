@@ -15,3 +15,6 @@
 
 ##Postman Collection
 The postman collection and environment to use the api is available on file `postman_collection.json` and `postman_environment.json` at the root of project.
+
+##Common problemns
+1. If you're using Linux, maybe you'll need to change the permission of storage folder running the following command`chmod -R 777 storage`
